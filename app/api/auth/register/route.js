@@ -15,7 +15,7 @@ export async function POST(request) {
 
     const lowerEmail = email.toLowerCase()
     const existing = await User.findOne({ email: lowerEmail })
-    
+
     if (existing && existing.isVerified) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 })
     }
@@ -36,10 +36,18 @@ export async function POST(request) {
     }
 
     const { sendOTP } = await import('@/lib/email')
-    await sendOTP(lowerEmail, otp)
+    const sent = await sendOTP(lowerEmail, otp)
+
+    if (!sent) {
+      return NextResponse.json({
+        error: 'Failed to send verification email. Please check server configuration.',
+        details: 'Email service authentication failed or is not configured.'
+      }, { status: 500 })
+    }
 
     return NextResponse.json({ requireOtp: true, message: 'OTP sent to email', email: lowerEmail }, { status: 201 })
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    console.error('Registration Error:', err)
+    return NextResponse.json({ error: `Registration failed: ${err.message}` }, { status: 500 })
   }
 }
