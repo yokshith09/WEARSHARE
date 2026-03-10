@@ -1074,3 +1074,112 @@ function AppFooter({ navigate }) {
     </footer>
   )
 }
+
+// ─── Home Page ────────────────────────────────────────────────────────────────
+function HomePage({ navigate, user }) {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const slides = [
+    { img: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070', title: 'Premium Ethnic Wear', sub: 'Rent authentic designer pieces for a fraction of the cost.', cta: 'Explore Collections', link: { gender: 'women' } },
+    { img: 'https://images.unsplash.com/photo-1550639525-c97d455acf70?q=80&w=2070', title: 'The Ultimate Men\'s Edit', sub: 'Sharp suits, kurtas, and more. Own the room.', cta: 'Shop Men', link: { gender: 'men' } },
+    { img: 'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=2070', title: 'Luxe Aesthetics', sub: 'Sustainable fashion meets premium quality.', cta: 'Rent Now', link: { listingType: 'rent' } }
+  ]
+
+  useEffect(() => { const timer = setInterval(() => setCurrentSlide(s => (s + 1) % slides.length), 5000); return () => clearInterval(timer) }, [])
+
+  const cats = [
+    { n: 'Women', i: 'https://images.unsplash.com/photo-1617922001439-4a2e6562f328?w=300', l: { gender: 'women' } },
+    { n: 'Men', i: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=300', l: { gender: 'men' } },
+    { n: 'Kids', i: 'https://images.unsplash.com/photo-1519238263530-990100fbfef2?w=300', l: { gender: 'kids' } },
+    { n: 'Footwear', i: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=300', l: { gender: 'footwear' } },
+    { n: 'Accessories', i: 'https://images.unsplash.com/photo-1509319117193-57bab727e09d?w=300', l: { gender: 'accessories' } }
+  ]
+
+  return (
+    <div>
+      {/* Hero Carousel */}
+      <div style={{ position: 'relative', height: '65vh', minHeight: 450, overflow: 'hidden', background: '#000' }}>
+        {slides.map((s, i) => (
+          <div key={i} className='hero-slide' style={{ opacity: currentSlide === i ? 1 : 0, transform: `scale(${currentSlide === i ? 1 : 1.05})`, zIndex: currentSlide === i ? 1 : 0 }}>
+            <div style={{ position: 'absolute', inset: 0, background: `url(${s.img}) center/cover` }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,.9) 20%, rgba(0,0,0,.3) 100%)' }} />
+            <div style={{ position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: '10vw', maxWidth: 600, paddingRight: '2rem' }}>
+              <h1 style={{ fontSize: '3.5vw', minFontSize: '2.5rem', fontWeight: 900, color: '#fff', marginBottom: '1rem', lineHeight: 1.1, letterSpacing: '-1px' }}>{s.title}</h1>
+              <p style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,.8)', marginBottom: '2.5rem', fontWeight: 500, lineHeight: 1.5 }}>{s.sub}</p>
+              <button onClick={() => navigate('explore', s.link)} className='btn' style={{ padding: '1.1rem 2.5rem', background: '#fff', color: '#000', fontSize: '1rem', fontWeight: 800, borderRadius: '8px', boxShadow: '0 20px 40px rgba(0,0,0,.3)' }}>
+                {s.cta} <i className='fas fa-arrow-right' style={{ marginLeft: '.5rem' }} />
+              </button>
+            </div>
+          </div>
+        ))}
+        {/* Slide Indicators */}
+        <div style={{ position: 'absolute', bottom: '2rem', left: '10vw', display: 'flex', gap: '.5rem', zIndex: 10 }}>
+          {slides.map((_, i) => <button key={i} onClick={() => setCurrentSlide(i)} className='btn' style={{ width: currentSlide === i ? 40 : 12, height: 6, borderRadius: 3, background: currentSlide === i ? '#E91E8C' : 'rgba(255,255,255,.3)', transition: 'all .3s' }} />)}
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 1440, margin: '0 auto', padding: '3rem 1.5rem' }}>
+        {/* Category Strip */}
+        <div className='hscroll' style={{ marginBottom: '4rem', marginTop: '-5rem', position: 'relative', zIndex: 20 }}>
+          {cats.map(c => (
+            <div key={c.n} onClick={() => navigate('explore', c.l)} style={{ flexShrink: 0, width: 140, cursor: 'pointer', group: 'true' }}>
+              <div style={{ width: 140, height: 140, borderRadius: '50%', background: '#1c1c1e', overflow: 'hidden', border: '4px solid #000', outline: '2px solid rgba(255,255,255,.1)', marginBottom: '1rem', transition: 'all .3s' }} onMouseOver={e => e.currentTarget.style.outlineColor = '#E91E8C'} onMouseOut={e => e.currentTarget.style.outlineColor = 'rgba(255,255,255,.1)'}>
+                <img src={c.i} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={c.n} />
+              </div>
+              <div style={{ textAlign: 'center', fontWeight: 800, fontSize: '.95rem', letterSpacing: '.5px', color: '#E2E8F0' }}>{c.n.toUpperCase()}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Action Split: Rent vs Buy */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: '2rem', marginBottom: '5rem' }}>
+          <div onClick={() => navigate('explore', { listingType: 'rent' })} style={{ position: 'relative', height: 380, borderRadius: '16px', overflow: 'hidden', cursor: 'pointer' }}>
+            <img src='https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1000' style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt='Rentals' />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(124,58,237,.9) 0%, rgba(0,0,0,.2) 100%)' }} />
+            <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', right: '2rem' }}>
+              <div style={{ fontSize: '.8rem', fontWeight: 800, color: '#fff', letterSpacing: '2px', marginBottom: '.5rem' }}>SUSTAINABLE FASHION</div>
+              <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#fff', marginBottom: '1rem', lineHeight: 1.1 }}>Rent The Look</h2>
+              <button className='btn' style={{ padding: '.8rem 2rem', background: '#fff', color: '#7C3AED', fontWeight: 800, borderRadius: '8px' }}>Explore Rentals</button>
+            </div>
+          </div>
+          <div onClick={() => navigate('explore', { listingType: 'buy' })} style={{ position: 'relative', height: 380, borderRadius: '16px', overflow: 'hidden', cursor: 'pointer' }}>
+            <img src='https://images.unsplash.com/photo-1445205170230-053b83016050?q=80&w=1000' style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt='Buy' />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(233,30,140,.9) 0%, rgba(0,0,0,.2) 100%)' }} />
+            <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', right: '2rem' }}>
+              <div style={{ fontSize: '.8rem', fontWeight: 800, color: '#fff', letterSpacing: '2px', marginBottom: '.5rem' }}>PRELOVED & NEW</div>
+              <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#fff', marginBottom: '1rem', lineHeight: 1.1 }}>Buy Must-Haves</h2>
+              <button className='btn' style={{ padding: '.8rem 2rem', background: '#fff', color: '#E91E8C', fontWeight: 800, borderRadius: '8px' }}>Shop Collection</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats Banner */}
+        <div style={{ background: 'linear-gradient(135deg,#1c1c1e,#111)', borderRadius: '20px', padding: '4rem 2rem', border: '1px solid rgba(255,255,255,.05)', marginBottom: '5rem', textAlign: 'center' }}>
+          <h2 style={{ fontWeight: 900, fontSize: '2rem', marginBottom: '3rem' }}>Why Choose WearShare?</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '2rem' }}>
+            {[
+              { i: 'fa-box-open', t: 'Try Before You Buy', d: 'Rent to test, buy if you love it.' },
+              { i: 'fa-leaf', t: 'Eco-Friendly', d: 'Reduce textile waste by sharing.' },
+              { i: 'fa-shield-alt', t: '100% Secure', d: 'Safe payments & verified users.' },
+              { i: 'fa-rupee-sign', t: 'Earn Money', d: 'List your idle wardrobe to earn.' }
+            ].map(s => (
+              <div key={s.t}>
+                <div style={{ width: 60, height: 60, borderRadius: '15px', background: 'rgba(233,30,140,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                  <i className={`fas ${s.i}`} style={{ fontSize: '1.5rem', color: '#E91E8C' }} />
+                </div>
+                <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '.5rem' }}>{s.t}</div>
+                <div style={{ color: '#9A9A9A', fontSize: '.9rem', lineHeight: 1.5 }}>{s.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div style={{ textAlign: 'center', padding: '3rem 0' }}>
+          <h2 style={{ fontWeight: 900, fontSize: '2.5rem', marginBottom: '1rem' }}>Join the Fashion Revolution</h2>
+          <p style={{ color: '#9A9A9A', fontSize: '1.1rem', marginBottom: '2rem', maxWidth: 600, margin: '0 auto 2rem' }}>Whether you're looking for your next party outfit or want to clear out your closet, WearShare is your community.</p>
+          <button onClick={() => navigate('explore')} className='btn' style={{ padding: '1.2rem 3rem', background: 'linear-gradient(135deg,#E91E8C,#7C3AED)', color: '#fff', fontSize: '1.1rem', fontWeight: 800, borderRadius: '10px', boxShadow: '0 10px 30px rgba(233,30,140,.3)' }}>Start Exploring Now</button>
+        </div>
+      </div>
+    </div>
+  )
+}
