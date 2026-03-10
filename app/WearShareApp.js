@@ -32,8 +32,9 @@ textarea.inp{resize:vertical;min-height:80px}
 .sp{width:20px;height:20px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
 .badge{display:inline-block;padding:.3rem .7rem;border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:.3px}
 .tag{background:rgba(124,58,237,.15);color:${P2};border:1px solid rgba(124,58,237,.2)}
+.collection-card:hover .collection-content{transform:translateY(-10px) !important}
+.collection-card:hover .shop-btn{transform:translateX(5px);background:${P};color:#fff}
 @media(max-width:768px){.hm{display:none!important}.mob-menu{display:flex!important}}
-@media(min-width:769px){.mob-menu{display:none!important}}
 .upload-zone{border:2px dashed rgba(255,255,255,.15);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:all .3s}
 .upload-zone:hover,.upload-zone.drag{border-color:${P};background:rgba(124,58,237,.05)}
 .status-track{display:flex;align-items:center;gap:.5rem;position:relative}
@@ -286,20 +287,33 @@ function HomePage({ user, setPage, onRegister, setExploreFilters }) {
         </div>
       </section>
 
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '2rem 1.5rem 3rem' }}>
-        <h2 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: 900, marginBottom: '.5rem' }} className="gt">Explore Collections</h2>
-        <p style={{ textAlign: 'center', color: '#64748B', marginBottom: '2.5rem' }}>Curated premium fashion for every occasion</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '1.5rem' }}>
-          {collections.map(c => (
-            <div key={c.title} className="card" style={{ overflow: 'hidden', cursor: 'pointer' }} onClick={() => { setExploreFilters({ category: c.category }); setPage('explore') }}>
-              <div style={{ height: 280, position: 'relative', overflow: 'hidden' }}>
-                <img src={c.img} alt={c.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .5s' }} onMouseOver={e => e.target.style.transform = 'scale(1.05)'} onMouseOut={e => e.target.style.transform = 'scale(1)'} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(15,23,42,0.9) 0%,transparent 100%)' }} />
-                <div style={{ position: 'absolute', bottom: '1.25rem', left: '1.25rem' }}>
-                  <h3 style={{ color: '#fff', fontWeight: 800, fontSize: '1.2rem', marginBottom: '.2rem' }}>{c.title}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem' }}>
-                    <span style={{ color: P2, fontSize: '.8rem', fontWeight: 700 }}>{c.count}</span>
-                    <i className="fas fa-arrow-right" style={{ color: P2, fontSize: '.7rem' }} />
+      <section style={{ maxWidth: 1200, margin: '0 auto', padding: '4rem 1.5rem 2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2.5rem' }}>
+          <div>
+            <div className="badge tag" style={{ marginBottom: '.75rem' }}>TRENDING NOW</div>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.5px' }} className="gt">Handpicked Collections</h2>
+          </div>
+          <button onClick={() => setPage('explore')} className="btn" style={{ background: 'transparent', color: P2, fontWeight: 700, fontSize: '1rem', borderBottom: `2px solid ${P2}`, paddingBottom: '.2rem', borderRadius: 0 }}>View All <i className="fas fa-arrow-right" style={{ fontSize: '.8rem', marginLeft: '.4rem' }} /></button>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', gap: '2rem' }}>
+          {collections.map((c, i) => (
+            <div key={c.title} style={{ cursor: 'pointer' }} onClick={() => { setExploreFilters({ category: c.category }); setPage('explore') }} className="collection-card">
+              <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', aspectRatio: '4/5', boxShadow: '0 10px 30px rgba(0,0,0,.15)', background: `linear-gradient(135deg, ${P}22, ${A}22)` }}>
+                <img src={c.img} alt={c.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)', transform: 'scale(1.02)' }}
+                  onMouseOver={e => e.target.style.transform = 'scale(1.1)'}
+                  onMouseOut={e => e.target.style.transform = 'scale(1.02)'} />
+
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.4) 40%, transparent 100%)', pointerEvents: 'none' }} />
+
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '2rem 1.5rem', transform: 'translateY(10px)', transition: 'transform 0.3s', pointerEvents: 'none' }} className="collection-content">
+                  <div style={{ display: 'inline-block', background: 'rgba(255,255,255,.15)', backdropFilter: 'blur(8px)', padding: '.3rem .8rem', borderRadius: '4px', fontSize: '.75rem', fontWeight: 800, color: '#fff', letterSpacing: '1px', marginBottom: '.8rem', textTransform: 'uppercase' }}>{c.category}</div>
+                  <h3 style={{ color: '#fff', fontWeight: 900, fontSize: '1.6rem', marginBottom: '.4rem', textShadow: '0 2px 4px rgba(0,0,0,.5)', lineHeight: 1.2 }}>{c.title}</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1rem' }}>
+                    <span style={{ color: '#CBD5E1', fontSize: '.9rem', fontWeight: 500 }}>{c.count} available</span>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: D, transition: 'transform 0.3s', boxShadow: '0 4px 12px rgba(0,0,0,.2)' }} className="shop-btn">
+                      <i className="fas fa-arrow-right" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -550,6 +564,10 @@ function TryOnModal({ listing, onClose }) {
 function CartModal({ show, onClose, toast, user, refreshCart, setPage }) {
   const [items, setItems] = useState([])
   const [rentalStart, setRentalStart] = useState('')
+  const [deliveryDetails, setDeliveryDetails] = useState('')
+  const [returnDetails, setReturnDetails] = useState('')
+  const [pickupDetails, setPickupDetails] = useState('')
+  const [collectDetails, setCollectDetails] = useState('')
   const [paying, setPaying] = useState(false)
   const loadCart = async () => { if (!user) return; const r = await fetch('/api/cart'); if (r.ok) { const d = await r.json(); setItems(d.items || []) } }
   useEffect(() => { if (show) loadCart() }, [show, user])
@@ -561,6 +579,7 @@ function CartModal({ show, onClose, toast, user, refreshCart, setPage }) {
   const total = subtotal + deposit + platformFee
   const checkout = async () => {
     if (!rentalStart) { toast('Select a rental start date', 'error'); return }
+    if (!deliveryDetails || !returnDetails || !pickupDetails || !collectDetails) { toast('Please fill in all logistics details', 'error'); return }
     setPaying(true)
     try {
       const r = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ rentalStart }) })
@@ -568,8 +587,8 @@ function CartModal({ show, onClose, toast, user, refreshCart, setPage }) {
       if (!d.orderId) { toast(d.error || 'Checkout failed', 'error'); setPaying(false); return }
       const openRzp = (data) => {
         const rzp = new window.Razorpay({
-          key: data.keyId, amount: data.amount, currency: data.currency, name: 'WearShare', description: 'Clothing Rental', order_id: data.orderId, theme: { color: '#7C3AED' },
-          handler: async (res) => { const cr = await fetch('/api/checkout/confirm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ paymentId: res.razorpay_payment_id, orderId: res.razorpay_order_id, signature: res.razorpay_signature, rentalStart }) }); if (cr.ok) { toast('Payment successful! 🎉'); onClose(); refreshCart(); setItems([]); setPage('dashboard') } else toast('Verification failed', 'error'); setPaying(false) },
+          key: data.keyId, amount: data.amount, currency: data.currency, name: 'WearShare', description: 'Premium Clothing Rental', order_id: data.orderId, theme: { color: '#EC4899' },
+          handler: async (res) => { const cr = await fetch('/api/checkout/confirm', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ paymentId: res.razorpay_payment_id, orderId: res.razorpay_order_id, signature: res.razorpay_signature, rentalStart, deliveryDetails, returnDetails, pickupDetails, collectDetails }) }); if (cr.ok) { toast('Payment successful! 🎉'); onClose(); refreshCart(); setItems([]); setPage('dashboard') } else toast('Verification failed', 'error'); setPaying(false) },
           modal: { ondismiss: () => setPaying(false) }
         }); rzp.open()
       }
@@ -577,40 +596,79 @@ function CartModal({ show, onClose, toast, user, refreshCart, setPage }) {
     } catch (e) { toast('Payment error: ' + e.message, 'error'); setPaying(false) }
   }
   return (
-    <Modal show={show} onClose={onClose} title="🛒 Your Cart" wide>
+    <Modal show={show} onClose={onClose} title="🛒 Shopping Cart" wide>
       {items.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '3rem', color: '#64748B' }}>
-          <i className="fas fa-shopping-bag" style={{ fontSize: '3rem', marginBottom: '1rem', display: 'block', color: '#334155' }} />
-          <h3 style={{ color: '#94A3B8', marginBottom: '.5rem' }}>Your cart is empty</h3>
-          <button onClick={onClose} className="btn grd" style={{ color: '#fff', padding: '.65rem 1.5rem', marginTop: '.75rem' }}>Browse Items</button>
+        <div style={{ textAlign: 'center', padding: '4rem 2rem', color: '#64748B' }}>
+          <i className="fas fa-shopping-bag" style={{ fontSize: '3.5rem', marginBottom: '1rem', display: 'block', color: 'rgba(255,255,255,.1)' }} />
+          <h3 style={{ color: '#E2E8F0', fontSize: '1.25rem', fontWeight: 800, marginBottom: '.5rem' }}>Your cart feels so light!</h3>
+          <p style={{ color: '#94A3B8', marginBottom: '1.5rem' }}>There is nothing in your bag. Let's add some items.</p>
+          <button onClick={onClose} className="btn grd" style={{ color: '#fff', padding: '.8rem 2rem', fontWeight: 700, borderRadius: '8px' }}>Explore Fashion</button>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '1.25rem' }}>
-          <div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '2rem' }}>
+          <div style={{ maxHeight: '70vh', overflowY: 'auto', paddingRight: '1rem' }}>
+            <h3 style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '1.25rem', color: '#E2E8F0', borderBottom: '1px solid rgba(255,255,255,.06)', paddingBottom: '.75rem' }}>Items in your Bag</h3>
             {items.map(item => (
-              <div key={item.listingId} style={{ display: 'flex', gap: '.8rem', padding: '.9rem', border: '1px solid rgba(255,255,255,.06)', borderRadius: '12px', marginBottom: '.6rem', alignItems: 'center', background: 'rgba(15,23,42,.4)' }}>
-                <div style={{ width: 60, height: 60, background: 'linear-gradient(135deg,#7C3AED,#EC4899)', borderRadius: '10px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><i className="fas fa-shirt" style={{ color: 'rgba(255,255,255,.5)', fontSize: '1.3rem' }} /></div>
+              <div key={item.listingId} style={{ display: 'flex', gap: '1.25rem', padding: '1.25rem', border: '1px solid rgba(255,255,255,.08)', borderRadius: '16px', marginBottom: '1rem', alignItems: 'center', background: 'rgba(30,41,59,.4)', transition: 'all .3s', boxShadow: '0 4px 12px rgba(0,0,0,.1)' }}>
+                <div style={{ width: 80, height: 100, background: 'linear-gradient(135deg,#7C3AED,#EC4899)', borderRadius: '12px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  {item.imageData || item.imageUrl ? <img src={item.imageData || item.imageUrl} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <i className="fas fa-shirt" style={{ color: 'rgba(255,255,255,.5)', fontSize: '2rem' }} />}
+                </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, marginBottom: '.15rem', fontSize: '.9rem', color: '#E2E8F0' }}>{item.name}</div>
-                  <div style={{ color: '#64748B', fontSize: '.8rem' }}>₹{item.rentalPricePerDay}/day · Size {item.size}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginTop: '.4rem' }}>
-                    <span style={{ fontSize: '.8rem', color: '#64748B' }}>Days:</span>
-                    <input type="number" min="1" defaultValue={item.days} className="inp" style={{ width: '60px', padding: '.25rem .4rem', fontSize: '.85rem' }} onBlur={e => updateDays(item.listingId, e.target.value)} />
-                    <span style={{ fontWeight: 700, color: P2, fontSize: '.9rem' }}>₹{item.rentalPricePerDay * item.days}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#F8FAFC', marginBottom: '.3rem' }}>{item.name}</div>
+                    <button onClick={() => removeItem(item.listingId)} className="btn" style={{ background: 'transparent', color: R, padding: '.2rem .5rem', fontSize: '1rem', opacity: .7 }}><i className="fas fa-times" /></button>
+                  </div>
+                  <div style={{ color: '#94A3B8', fontSize: '.85rem', marginBottom: '.6rem' }}>Size {item.size} | Sold by Community</div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '.4rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+                      <span style={{ fontSize: '.85rem', color: '#CBD5E1', fontWeight: 600 }}>Days:</span>
+                      <select value={item.days} onChange={e => updateDays(item.listingId, e.target.value)} className="inp" style={{ width: '70px', padding: '.3rem .6rem', fontSize: '.9rem', background: 'rgba(15,23,42,.8)' }}>
+                        {[1, 2, 3, 4, 5, 7, 10, 14, 30].map(d => <option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
+                    <div style={{ fontWeight: 900, color: P2, fontSize: '1.1rem' }}>₹{item.rentalPricePerDay * item.days}</div>
                   </div>
                 </div>
-                <button onClick={() => removeItem(item.listingId)} className="btn" style={{ background: 'rgba(239,68,68,.1)', color: R, padding: '.35rem .6rem', border: '1px solid rgba(239,68,68,.15)', fontSize: '.8rem' }}><i className="fas fa-trash" /></button>
               </div>
             ))}
+
+            <div style={{ marginTop: '2rem', paddingBottom: '1rem' }}>
+              <h3 style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: '1rem', color: '#E2E8F0', borderBottom: '1px solid rgba(255,255,255,.06)', paddingBottom: '.75rem' }}><i className="fas fa-truck" style={{ marginRight: '.5rem', color: P2 }} />Logistics & Delivery</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <FG label="Start Date *"><input type="date" className="inp" value={rentalStart} min={new Date().toISOString().split('T')[0]} onChange={e => setRentalStart(e.target.value)} style={{ background: 'rgba(15,23,42,.6)' }} /></FG>
+                <FG label="Delivery Details *"><input className="inp" value={deliveryDetails} onChange={e => setDeliveryDetails(e.target.value)} placeholder="House, Area, Landm..." style={{ background: 'rgba(15,23,42,.6)' }} /></FG>
+                <FG label="Return Details *"><input className="inp" value={returnDetails} onChange={e => setReturnDetails(e.target.value)} placeholder="Return location/notes" style={{ background: 'rgba(15,23,42,.6)' }} /></FG>
+                <FG label="Pickup Details *"><input className="inp" value={pickupDetails} onChange={e => setPickupDetails(e.target.value)} placeholder="Where to pick from?" style={{ background: 'rgba(15,23,42,.6)' }} /></FG>
+                <div style={{ gridColumn: 'span 2' }}>
+                  <FG label="Collect Details *"><input className="inp" value={collectDetails} onChange={e => setCollectDetails(e.target.value)} placeholder="Who will collect?" style={{ background: 'rgba(15,23,42,.6)' }} /></FG>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div>
-            <div className="glass2" style={{ padding: '1.1rem', borderRadius: '14px', position: 'sticky', top: '1rem' }}>
-              <h3 style={{ fontWeight: 700, marginBottom: '.9rem', fontSize: '1rem', color: '#E2E8F0' }}>Order Summary</h3>
-              <FG label="📅 Rental Start Date"><input type="date" className="inp" value={rentalStart} min={new Date().toISOString().split('T')[0]} onChange={e => setRentalStart(e.target.value)} /></FG>
-              {[['Rental', '₹' + subtotal], ['Deposit', '₹' + deposit], ['Platform Fee', '₹' + platformFee]].map(([k, v]) => (<div key={k} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '.45rem', fontSize: '.85rem' }}><span style={{ color: '#64748B' }}>{k}</span><span style={{ fontWeight: 600, color: '#CBD5E1' }}>{v}</span></div>))}
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: '.6rem', marginTop: '.4rem', marginBottom: '1rem' }}><span style={{ fontWeight: 700 }}>Total</span><span style={{ fontWeight: 900, fontSize: '1.15rem', color: P2 }}>₹{total}</span></div>
-              <button onClick={checkout} disabled={paying} className="btn grd" style={{ width: '100%', padding: '.8rem', color: '#fff', fontSize: '.95rem', boxShadow: '0 4px 15px rgba(124,58,237,.3)' }}>{paying ? <span className="sp" /> : <><i className="fas fa-lock" style={{ marginRight: '.4rem' }} />Pay with Razorpay</>}</button>
-              <p style={{ textAlign: 'center', fontSize: '.72rem', color: '#475569', marginTop: '.6rem' }}><i className="fas fa-shield-halved" style={{ marginRight: '.2rem' }} />Secured by Razorpay</p>
+            <div className="glass2" style={{ padding: '1.5rem', borderRadius: '16px', position: 'sticky', top: '1rem', border: '1px solid rgba(255,255,255,.1)' }}>
+              <h3 style={{ fontWeight: 800, marginBottom: '1.25rem', fontSize: '1.1rem', color: '#E2E8F0', borderBottom: '1px solid rgba(255,255,255,.06)', paddingBottom: '.75rem' }}>Price Details ({items.length} Items)</h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '.8rem', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.95rem' }}><span style={{ color: '#94A3B8' }}>Total Rental</span><span style={{ fontWeight: 600, color: '#F8FAFC' }}>₹{subtotal}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.95rem' }}><span style={{ color: '#94A3B8' }}>Security Deposit (Refundable)</span><span style={{ fontWeight: 600, color: '#F8FAFC' }}>₹{deposit}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.95rem' }}><span style={{ color: '#94A3B8' }}>Platform Fee (5%)</span><span style={{ fontWeight: 600, color: '#F8FAFC' }}>₹{platformFee}</span></div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed rgba(255,255,255,.15)', paddingTop: '1.25rem', marginBottom: '1.5rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '1.1rem' }}>Total Amount</span>
+                <span style={{ fontWeight: 900, fontSize: '1.4rem', color: P2 }}>₹{total}</span>
+              </div>
+
+              <button onClick={checkout} disabled={paying} className="btn grd" style={{ width: '100%', padding: '1.1rem', color: '#fff', fontSize: '1.05rem', fontWeight: 800, boxShadow: '0 8px 20px rgba(236,72,153,.3)', borderRadius: '10px' }}>
+                {paying ? <span className="sp" /> : <><i className="fas fa-lock" style={{ marginRight: '.5rem' }} />Place Order</>}
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', marginTop: '1.25rem', color: '#64748B', fontSize: '.75rem', fontWeight: 600 }}>
+                <i className="fas fa-shield-check" style={{ color: '#10B981' }} />
+                100% Secure Razorpay Checkout
+              </div>
             </div>
           </div>
         </div>

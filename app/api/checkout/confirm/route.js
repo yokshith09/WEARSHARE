@@ -13,7 +13,7 @@ export async function POST(request) {
   if (!decoded) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
-    const { paymentId, orderId, signature, rentalStart } = await request.json()
+    const { paymentId, orderId, signature, rentalStart, deliveryDetails, returnDetails, pickupDetails, collectDetails } = await request.json()
 
     // Verify Razorpay signature
     const body = orderId + '|' + paymentId
@@ -72,6 +72,10 @@ export async function POST(request) {
         deliveryStatus: 'pending',
         pickupLocation: lender?.address || 'To be communicated',
         returnDeadline: endDate,
+        deliveryDetails,
+        returnDetails,
+        pickupDetails,
+        collectDetails,
         paymentId,
         orderId
       })

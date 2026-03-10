@@ -22,6 +22,13 @@ const BookingSchema = new mongoose.Schema({
   pickupTime: { type: String, default: '' },
   returnLocation: { type: String, default: '' },
   returnDeadline: { type: Date },
+
+  // New user logistics details
+  deliveryDetails: { type: String, default: '' },
+  returnDetails: { type: String, default: '' },
+  pickupDetails: { type: String, default: '' },
+  collectDetails: { type: String, default: '' },
+
   paymentId: String,
   orderId: String,
   createdAt: { type: Date, default: Date.now }
